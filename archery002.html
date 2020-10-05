@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+   <meta charset="utf-8">
+   <title>archery tablo</title>  
+   </head>
+   
+	<style> 
+	
+
+/*---------------------------------------------------------------*/
+body {background-color:#000000; /* страница */
+	user-select:none;}	
+	
+#container {
+	  color:#f1f1f1;
+	border:2px solid blue;
+	border-radius:7px;
+	padding:2px;	
+	display:grid;/*Опеределяет элемент как контейнер*/
+	grid-gap:4px 4px;/*Опеределяет ширину линии между строками и столбцами */
+	grid-template-columns: 2fr 2fr 2fr 1fr ;/*Опеределяет колонки сетки */
+	grid-template-rows: 100px 200px 200px 200px 50px; /*Опеределяет строки сетки */
+	grid-template-areas:/*Опеределяет шаблон сетки */
+		"v1 v1 v1 v1"
+		"v2 v2 v2 v3"
+		"v2 v2 v2 v4"
+		"v2 v2 v2 v5"
+		"v6 v6 v6 v6"
+		
+		
+}
+	#container .item1{grid-area: v1}
+	#container .item2{grid-area: v2}
+	#container .item3{grid-area: v3}
+	#container .item4{grid-area: v4}
+	#container .item5{grid-area: v5}
+	#container .item6{grid-area: v6}
+
+
+#container .item{
+	border:2px solid blue;
+	border-radius:7px;
+	padding:20px;
+	display:flex;/*Выравнивание элементов во Flex контейнере*/
+    align-items: center;/*Выравнивает элементы вдоль оси строки (по горизонтали)*/
+	justify-content: center;/*Выравнивает (по вертикали)*/
+
+
+}
+#con11.item {font-size: 50px; /* заголовок*/}
+#con13.item {font-size: 80px; /* AB */}
+#con15.item {font-size: 80px; /* CD */}
+
+#con12.item {font-size:400px; /* основной таймер */}
+
+#con14.item {background-color:lightyellow; /* световой сигнал */
+        font-size: 80px; /* серия */
+		 color: black;/* серия */
+		
+}
+
+
+#stop {     /* кнопки управления */
+    background-color: #000000;
+	margin :3px;
+    border: none;
+    color: white;
+    padding: 1px 32px;
+    text-align: center;
+    text-decoration: none;
+   // display: inline-block;
+   // font-size: 16px;
+}
+
+
+	</style>
+	
+   <body>
+   <div id="container">
+		<div id="con11" class="item item1">КРОО ФЕДЕРАЦИЯ СТРЕЛЬБЫ ИЗ ЛУКА</div>
+		<div id="con12" class="item item2">0:10</div>
+		<div id="con13" class="item item3">AB</div>
+		<div id="con14" class="item item4"></div>
+		<div id="con15" class="item item5"></div>
+		<div id="con16" class="item item6">
+		<button id="stop"onclick="button('1')">start</button>
+		<button id="stop"onclick="button('2')">stop</button>
+		<input id="radio2"class="check" name="rb1" type="radio" checked>2min &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </input> 
+		<input id="radio4"class="check" name="rb1" type="radio">4min</input> 
+		</div>
+	</div>
+ 
+      <script><!-- скрипт внутри -->
+//-------------------------------------------------------------------	
+	let timer = 10;
+	let t10;
+	let i=1;
+	audio = new Audio('111.mp3');
+	//audio.preload = 'auto';
+   // scr = '1.wav';
+//-------------------------------------------------------------------
+function button(num){	  //обработка кнопок 
+	if (num==1){//при нажатии на старт
+	timer = 10;
+	//audio.play();console.log("mp3");
+	//new Audio('1.wav').play();console.log("mp3");//работает
+	tim10();
+	//*** номер сериии и аб сд 
+	document.querySelector("#con14").textContent = Math.floor(i);//меняем текст номер серии
+	console.log(Math.floor(i=i+0.5));//вывод в консоль
+	if( (Math.floor(i))%2 ) {console.log("четно");//подсветка аб
+	document.querySelector("#con13").textContent = "AB";//меняем текст AB
+	document.querySelector("#con15").textContent = "";//меняем текст 
+	}
+	else {console.log(" не четно");//подсветка сд
+	document.querySelector("#con15").textContent = "CD";//меняем текст CD
+	document.querySelector("#con13").textContent = "";//меняем текст 
+	}
+	//***
+	}
+	if(num==2){//при нажатии на стоп
+	clearTimeout(t10);//останавили интервалы 
+	console.log("stop");//вывод в консоль
+	}
+	}
+ //-------------------------------------------------------------------
+function vivod1(){	  //вывод на экран счетчика
+	let minutes = Math.floor(timer/60);//расчет минут
+	let seconds = timer%60;//расчет секунд
+	seconds = seconds <10 ? "0"+seconds://добавляем 0 когда меньше 10 сек
+	seconds;
+	document.querySelector("#con12").textContent = minutes+":"+ seconds ;//значение
+	}
+//----------------------timer 10 сек-----------------------------------
+function tim10(){
+if (timer==10){audio.play();console.log("mp3");}
+document.querySelector("#con14").style.backgroundColor="lightyellow";//меняем стили подсветка светофора желтая
+	timer--;//декремент счетчика
+	vivod1();
+	if (timer==0){//проверка досчитали до 0
+	console.log("return");//вывод в консоль
+	clearTimeout(t10);//остановили интервалы 
+	if (document.querySelector("#radio2").checked){timer=20;}
+	if (document.querySelector("#radio4").checked){timer=40;}
+	tim20();
+	}
+	else t10=setTimeout(tim10,1000);//рекурсия вызов функции tim10()один раз в сек
+	
+}
+//---------------------- timer основной--------------------------------
+function tim20(){
+document.querySelector("#con14").style.backgroundColor="lightgreen";//меняем стили подсветка светофора зеленая
+	timer--;//декремент счетчика
+	vivod1();
+	if (timer==0){//проверка досчитали до 0
+	console.log("return");//вывод в консоль
+	clearTimeout(t10);//остановили интервалы
+	timer=10;
+	
+	}
+	else t10=setTimeout(tim20,1000);//рекурсия вызов функции tim20() один раз в сек
+	
+}
+
+	</script>  
+
+   </body>
+</html>
